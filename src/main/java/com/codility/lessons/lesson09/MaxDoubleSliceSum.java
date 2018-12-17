@@ -2,7 +2,6 @@ package com.codility.lessons.lesson09;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static java.lang.Math.min;
 import static java.lang.Math.signum;
 
 /**
@@ -60,6 +59,7 @@ import static java.lang.Math.signum;
  * @see <a href="https://app.codility.com/demo/results/trainingK8JKPR-ZYQ/">The first result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingK9G8BV-3W6/">The second result</a>
  * @see <a href="https://app.codility.com/demo/results/training5Y5W3N-2J4/">The third result</a>
+ * @see <a href="https://app.codility.com/demo/results/trainingY87JES-NXF/">The fourth result</a>
  */
 public class MaxDoubleSliceSum {
 
@@ -73,10 +73,16 @@ public class MaxDoubleSliceSum {
     int min = A[1];
     int sliceStart = 1;
     int sliceEnd = 1;
+    int posMin = 1;
 
     for (int i = 1; i < A.length - 1; i++) {
       final int a = A[i];
-      min = min(min, a);
+
+      if (a < min) {
+        min = a;
+        posMin = i;
+      }
+
       final int nextSum = lastMaxSum + a;
       lastMaxSum = (int) signum(nextSum) * max(0, abs(nextSum));
 
@@ -106,10 +112,14 @@ public class MaxDoubleSliceSum {
     }
 
     if (sliceStart != sliceEnd) {
-      if (sliceEnd - sliceStart == 1 || sliceEnd - sliceStart > 3) {
+      if (A.length - sliceEnd == 2) {
+        if (sliceEnd - sliceStart > 3 || sliceEnd - sliceStart == 1) {
+          result -= min;
+        } else {
+          result -= A[sliceStart + 1];
+        }
+      } else if (min < 0 && posMin > sliceStart && posMin < sliceEnd) {
         result -= min;
-      } else {
-        result -= A[sliceStart + 1];
       }
     }
 
