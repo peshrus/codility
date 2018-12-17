@@ -1,7 +1,9 @@
 package com.codility.lessons.lesson09;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.max;
 import static java.lang.Math.min;
+import static java.lang.Math.signum;
 
 /**
  * A non-empty array A consisting of N integers is given.
@@ -57,6 +59,7 @@ import static java.lang.Math.min;
  * @author Ruslan Peshchuk (peshrus@gmail.com)
  * @see <a href="https://app.codility.com/demo/results/trainingK8JKPR-ZYQ/">The first result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingK9G8BV-3W6/">The second result</a>
+ * @see <a href="https://app.codility.com/demo/results/training5Y5W3N-2J4/">The third result</a>
  */
 public class MaxDoubleSliceSum {
 
@@ -68,32 +71,33 @@ public class MaxDoubleSliceSum {
     Integer result = null;
     int lastMaxSum = 0;
     int min = A[1];
-    int sliceStart = 0;
-    int sliceEnd = 0;
+    int sliceStart = 1;
+    int sliceEnd = 1;
 
     for (int i = 1; i < A.length - 1; i++) {
       final int a = A[i];
       min = min(min, a);
-
       final int nextSum = lastMaxSum + a;
+      lastMaxSum = (int) signum(nextSum) * max(0, abs(nextSum));
 
-      if (abs(nextSum) > 0) {
-        lastMaxSum = nextSum;
-      } else {
-        lastMaxSum = 0;
+      if (lastMaxSum == 0) {
         sliceStart = i;
+        sliceEnd = i;
         min = A[i];
       }
 
-      if (a >= lastMaxSum) {
-        lastMaxSum = a;
+      lastMaxSum = max(lastMaxSum, a);
+
+      if (lastMaxSum == a) {
         sliceStart = i;
+        sliceEnd = i;
         min = A[i];
       }
 
       if (result != null) {
-        if (lastMaxSum >= result) {
-          result = lastMaxSum;
+        result = max(result, lastMaxSum);
+
+        if (result == lastMaxSum) {
           sliceEnd = i;
         }
       } else {
@@ -101,10 +105,12 @@ public class MaxDoubleSliceSum {
       }
     }
 
-    if (sliceEnd - sliceStart > 3 || sliceEnd - sliceStart == 1) {
-      result -= min;
-    } else {
-      result -= A[sliceStart + 1];
+    if (sliceStart != sliceEnd) {
+      if (sliceEnd - sliceStart == 1 || sliceEnd - sliceStart > 3) {
+        result -= min;
+      } else {
+        result -= A[sliceStart + 1];
+      }
     }
 
     return result;
