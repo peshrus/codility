@@ -1,6 +1,8 @@
 package com.codility.lessons.lesson09;
 
+import static java.lang.Math.abs;
 import static java.lang.Math.max;
+import static java.lang.Math.signum;
 
 /**
  * A non-empty array A consisting of N integers is given.
@@ -60,6 +62,8 @@ import static java.lang.Math.max;
  * @see <a href="https://app.codility.com/demo/results/trainingY87JES-NXF/">The fourth result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingR33H3W-JE5/">The fifth result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingR33H3W-JE5/">The sixth result</a>
+ * @see <a href="https://app.codility.com/demo/results/trainingSH9K7K-CD9/">The seventh result</a>
+ * @see <a href="https://app.codility.com/demo/results/training9ATG9R-3N3/">The eighth result</a>
  */
 public class MaxDoubleSliceSum {
 
@@ -70,36 +74,50 @@ public class MaxDoubleSliceSum {
 
     int result = 0;
     int lastMaxSum = 0;
-    int min = A[1];
-    int minPos = 1;
+    int minCandidate = A[1];
+    int minCandidatePos = 1;
+    int min = minCandidate;
+    int minPos = minCandidatePos;
     int sliceStart = 1;
     int sliceEnd = 1;
 
     for (int i = 1; i < A.length - 1; i++) {
       final int el = A[i];
 
-      if (el < min) {
-        min = el;
-        minPos = i;
+      if (el < minCandidate) {
+        minCandidate = el;
+        minCandidatePos = i;
       }
 
       final int nextSum = lastMaxSum + el;
-      lastMaxSum = max(0, nextSum);
+      lastMaxSum = (int) signum(nextSum) * max(0, abs(nextSum));
 
       if (lastMaxSum == 0) {
         sliceStart = i;
         sliceEnd = i;
-        min = A[i];
+        minCandidate = A[i];
+        minCandidatePos = i;
+      }
+
+      lastMaxSum = max(lastMaxSum, el);
+
+      if (lastMaxSum == el) {
+        sliceStart = i;
+        sliceEnd = i;
+        minCandidate = A[i];
+        minCandidatePos = i;
       }
 
       if (lastMaxSum > result) {
         result = lastMaxSum;
         sliceEnd = i;
+        min = minCandidate;
+        minPos = minCandidatePos;
       }
     }
 
-    if (sliceStart != sliceEnd && A.length - sliceEnd == 2 || (min < 0 && minPos >= sliceStart
-        && minPos <= sliceEnd)) {
+    if (sliceStart != sliceEnd && (A.length - sliceEnd == 2 || (min < 0 && minPos >= sliceStart
+        && minPos <= sliceEnd && abs(result) > abs(min)))) {
       result -= min;
     }
 
