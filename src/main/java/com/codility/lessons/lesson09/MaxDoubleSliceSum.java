@@ -64,6 +64,7 @@ import static java.lang.Math.signum;
  * @see <a href="https://app.codility.com/demo/results/trainingR33H3W-JE5/">The sixth result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingSH9K7K-CD9/">The seventh result</a>
  * @see <a href="https://app.codility.com/demo/results/training9ATG9R-3N3/">The eighth result</a>
+ * @see <a href="https://app.codility.com/demo/results/trainingWCD9M5-7WK/">The ninth result</a>
  */
 public class MaxDoubleSliceSum {
 
@@ -116,8 +117,8 @@ public class MaxDoubleSliceSum {
       }
     }
 
-    if (sliceStart != sliceEnd && (A.length - sliceEnd == 2 || (min < 0 && minPos >= sliceStart
-        && minPos <= sliceEnd && abs(result) > abs(min)))) {
+    if (sliceStart != sliceEnd && ((A.length - sliceEnd == 2 && sliceStart == 1) || (min < 0
+        && minPos >= sliceStart && minPos <= sliceEnd && abs(result) > abs(min)))) {
       result -= min;
     }
 
