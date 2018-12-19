@@ -34,5 +34,9 @@ public class MaxDoubleSliceSumTest {
     assertEquals(17, maxDoubleSliceSum.solution(new int[]{3, 2, 6, -1, 4, 5, -2, 2}));
     assertEquals(18, maxDoubleSliceSum.solution(new int[]{3, -1, 2, 6, 4, 5, 1, 2}));
     assertEquals(17, maxDoubleSliceSum.solution(new int[]{3, -1, 2, 6, 4, 5, -1, 2}));
+    assertEquals(18, maxDoubleSliceSum.solution(new int[]{0, 10, -10, 8, 0}));
+    assertEquals(10, maxDoubleSliceSum.solution(new int[]{0, 1, 2, 3, -6, 4, -1, 6, 0}));
+    assertEquals(1, maxDoubleSliceSum.solution(new int[]{0, 1, -10, -2, 1, 0}));
+    assertEquals(2, maxDoubleSliceSum.solution(new int[]{0, -2, 1, -10, 1, 0}));
   }
 }

@@ -1,8 +1,10 @@
 package com.codility.lessons.lesson09;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static java.lang.Math.signum;
+import static java.lang.Math.min;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A non-empty array A consisting of N integers is given.
@@ -65,6 +67,8 @@ import static java.lang.Math.signum;
  * @see <a href="https://app.codility.com/demo/results/trainingSH9K7K-CD9/">The seventh result</a>
  * @see <a href="https://app.codility.com/demo/results/training9ATG9R-3N3/">The eighth result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingWCD9M5-7WK/">The ninth result</a>
+ * @see <a href="https://app.codility.com/demo/results/trainingGV3RNS-4BD/">The tenth result</a>
+ *
  */
 public class MaxDoubleSliceSum {
 
@@ -73,57 +77,52 @@ public class MaxDoubleSliceSum {
       return 0;
     }
 
-    int result = 0;
-    int lastMaxSum = 0;
-    int minCandidate = A[1];
-    int minCandidatePos = 1;
-    int min = minCandidate;
-    int minPos = minCandidatePos;
-    int sliceStart = 1;
-    int sliceEnd = 1;
+    final List<Integer> slices = new ArrayList<>();
+    int currentSliceMin = findSlices(A, slices);
+    int result = findMaxDoubleSlice(slices, currentSliceMin);
+
+    return result;
+  }
+
+  private int findSlices(int[] A, List<Integer> slices) {
+    int currentSlice = 0;
+    int currentSliceMin = A[1];
 
     for (int i = 1; i < A.length - 1; i++) {
-      final int el = A[i];
+      final int a = A[i];
 
-      if (el < minCandidate) {
-        minCandidate = el;
-        minCandidatePos = i;
+      if (a < 0) {
+        slices.add(currentSlice);
+        currentSlice = 0;
+        currentSliceMin = A[i + 1];
+
+        continue;
       }
 
-      final int nextSum = lastMaxSum + el;
-      lastMaxSum = (int) signum(nextSum) * max(0, abs(nextSum));
-
-      if (lastMaxSum == 0) {
-        sliceStart = i;
-        sliceEnd = i;
-        minCandidate = A[i];
-        minCandidatePos = i;
-      }
-
-      lastMaxSum = max(lastMaxSum, el);
-
-      if (lastMaxSum == el) {
-        sliceStart = i;
-        sliceEnd = i;
-        minCandidate = A[i];
-        minCandidatePos = i;
-      }
-
-      if (lastMaxSum > result) {
-        result = lastMaxSum;
-        sliceEnd = i;
-        min = minCandidate;
-        minPos = minCandidatePos;
-      }
+      currentSliceMin = min(currentSliceMin, a);
+      currentSlice += a;
     }
 
-    if (sliceStart != sliceEnd && ((A.length - sliceEnd == 2 && sliceStart == 1) || (min < 0
-        && minPos >= sliceStart && minPos <= sliceEnd && abs(result) > abs(min)))) {
-      result -= min;
-    }
+    slices.add(currentSlice);
 
-    if (result < 0) {
-      result = 0;
+    return currentSliceMin;
+  }
+
+  private int findMaxDoubleSlice(List<Integer> slices, int currentSliceMin) {
+    int result = slices.get(0);
+
+    switch (slices.size()) {
+      case 1:
+        result -= currentSliceMin;
+        break;
+      case 2:
+        result += slices.get(1);
+        break;
+      default: {
+        for (int j = 0; j < slices.size() - 1; j++) {
+          result = max(result, slices.get(j) + slices.get(j + 1));
+        }
+      }
     }
 
     return result;
