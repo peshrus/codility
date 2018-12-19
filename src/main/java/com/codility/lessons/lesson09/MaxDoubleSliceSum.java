@@ -1,10 +1,6 @@
 package com.codility.lessons.lesson09;
 
 import static java.lang.Math.max;
-import static java.lang.Math.min;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A non-empty array A consisting of N integers is given.
@@ -68,7 +64,7 @@ import java.util.List;
  * @see <a href="https://app.codility.com/demo/results/training9ATG9R-3N3/">The eighth result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingWCD9M5-7WK/">The ninth result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingGV3RNS-4BD/">The tenth result</a>
- *
+ * @see <a href="https://www.martinkysel.com/codility-maxdoubleslicesum-solution/">Not mine</a>
  */
 public class MaxDoubleSliceSum {
 
@@ -77,52 +73,21 @@ public class MaxDoubleSliceSum {
       return 0;
     }
 
-    final List<Integer> slices = new ArrayList<>();
-    int currentSliceMin = findSlices(A, slices);
-    int result = findMaxDoubleSlice(slices, currentSliceMin);
-
-    return result;
-  }
-
-  private int findSlices(int[] A, List<Integer> slices) {
-    int currentSlice = 0;
-    int currentSliceMin = A[1];
+    final int[] end = new int[A.length];
+    final int[] start = new int[A.length];
 
     for (int i = 1; i < A.length - 1; i++) {
-      final int a = A[i];
-
-      if (a < 0) {
-        slices.add(currentSlice);
-        currentSlice = 0;
-        currentSliceMin = A[i + 1];
-
-        continue;
-      }
-
-      currentSliceMin = min(currentSliceMin, a);
-      currentSlice += a;
+      end[i] = max(0, end[i - 1] + A[i]);
     }
 
-    slices.add(currentSlice);
+    for (int j = A.length - 2; j > 0; j--) {
+      start[j] = max(0, start[j + 1] + A[j]);
+    }
 
-    return currentSliceMin;
-  }
+    int result = 0;
 
-  private int findMaxDoubleSlice(List<Integer> slices, int currentSliceMin) {
-    int result = slices.get(0);
-
-    switch (slices.size()) {
-      case 1:
-        result -= currentSliceMin;
-        break;
-      case 2:
-        result += slices.get(1);
-        break;
-      default: {
-        for (int j = 0; j < slices.size() - 1; j++) {
-          result = max(result, slices.get(j) + slices.get(j + 1));
-        }
-      }
+    for (int k = 1; k < A.length - 1; k++) {
+      result = max(result, start[k + 1] + end[k - 1]);
     }
 
     return result;
