@@ -1,8 +1,6 @@
 package com.codility.lessons.lesson09;
 
-import static java.lang.Math.abs;
 import static java.lang.Math.max;
-import static java.lang.Math.signum;
 
 /**
  * A non-empty array A consisting of N integers is given. A pair of integers (P, Q), such that 0 ≤ P
@@ -37,6 +35,7 @@ import static java.lang.Math.signum;
  * @see <a href="https://app.codility.com/demo/results/training7CER4Q-BQG/">The first result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingGHRSA5-3RP/">The second result</a>
  * @see <a href="https://app.codility.com/demo/results/trainingA346GE-A6R/">The third result</a>
+ * @see <a href="https://app.codility.com/demo/results/trainingSP7UW5-K86/">Refactoring</a>
  */
 public class MaxSliceSum {
 
@@ -46,18 +45,12 @@ public class MaxSliceSum {
     }
 
     int lastMaxSum = 0;
-    Integer result = null;
+    int result = Integer.MIN_VALUE;
 
     for (int a : A) {
       final int nextSum = lastMaxSum + a;
-      lastMaxSum = (int) signum(nextSum) * max(0, abs(nextSum));
-      lastMaxSum = max(lastMaxSum, a);
-
-      if (result != null) {
-        result = max(result, lastMaxSum);
-      } else {
-        result = lastMaxSum;
-      }
+      lastMaxSum = max(nextSum, a);
+      result = max(result, lastMaxSum);
     }
 
     return result;
