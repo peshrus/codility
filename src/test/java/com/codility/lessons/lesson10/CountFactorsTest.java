@@ -28,9 +28,4 @@ public class CountFactorsTest {
   public void solution_long_1() {
     assertEquals(2, countFactors.solution(Integer.MAX_VALUE));
   }
-
-  @Test(timeout = 1)
-  public void solution_long_2() {
-    assertEquals(2, countFactors.solution(780291637));
-  }
 }
